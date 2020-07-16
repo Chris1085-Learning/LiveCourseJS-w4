@@ -1,0 +1,56 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  font-size: 16px;
+  width: 100%;
+  height: 100%;
+  font-weight: normal;
+}
+
+@media (min-width: 576px) {
+  .productModal .modal-dialog {
+    max-width: 900px;
+  }
+}
+
+label {
+  margin-bottom: 0.5rem;
+}
+
+textarea {
+  resize: none;
+}
+
+.material-icons {
+  color: rgb(255, 180, 0);
+}
+
+.comments {
+  line-height: 1.5;
+}
+
+html,
+.login {
+  height: 100%;
+  text-align: center;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
