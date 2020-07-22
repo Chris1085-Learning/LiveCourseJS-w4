@@ -1,7 +1,14 @@
+import pagination from "./pagination.js";
+import modal from "./modal.js";
+
+Vue.component("pagination", pagination);
+Vue.component("modal", modal);
+
 new Vue({
   el: "#app",
   data: {
     products: [],
+    pagination: {},
     tempProduct: {
       options: {
         comments: [
@@ -21,41 +28,27 @@ new Vue({
       token: "",
       uuid: "017c2859-74ba-4b94-af09-246e50d8864f",
     },
+    isNew: "",
+    loadingBtn: "",
   },
   created() {
     this.user.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     if (this.user.token === "") {
       window.location = "login.html";
     }
-    // this.getProducts();
+    this.getProducts();
   },
   methods: {
-    login() {
-      console.log(this.loginUser);
-      const api = `https://course-ec-api.hexschool.io/api/auth/login`;
-      axios
-        .post(api, this.loginUser)
-        .then((res) => {
-          const token = res.data.token;
-          const expired = res.data.expired;
-          this.user.uuid = res.data.uuid;
-
-          document.cookie = `token=${token};expires=${new Date(expired * 1000)}; path=/`;
-          window.location = "index.html";
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    getProducts() {
-      const api = `https://course-ec-api.hexschool.io/api/${this.user.uuid}/admin/ec/products?page=${page}`;
+    getProducts(num = 1) {
+      const api = `https://course-ec-api.hexschool.io/api/${this.user.uuid}/admin/ec/products?pages=${num}`;
       //預設帶入 token
       axios.defaults.headers.common.Authorization = `Bearer ${this.user.token}`;
 
       axios.get(api).then((res) => {
-        console.log(res);
-        this.products = response.data.data; // 取得產品列表
-        // this.pagination = response.data.meta.pagination; // 取得分頁資訊
+        this.products = res.data.data; // 取得產品列表
+        this.pagination = res.data.meta.pagination; // 取得分頁資訊
+
+        console.log(this.pagination);
       });
     },
     openModal(isNew, item) {
@@ -77,9 +70,16 @@ new Vue({
           $("#productModal").modal("show");
           break;
         case "edit":
-          this.tempProduct = JSON.parse(JSON.stringify(item));
+          const api = `https://course-ec-api.hexschool.io/api/${this.user.uuid}/admin/ec/product/${item.id}`;
+          this.loadingBtn = item.id;
+
+          axios.get(api).then((res) => {
+            console.log(res);
+            this.tempProduct = res.data.data;
+            $("#productModal").modal("show");
+            this.loadingBtn = "";
+          });
           this.tempProduct.isNew = false;
-          $("#productModal").modal("show");
           break;
         case "delete":
           this.tempProduct = JSON.parse(JSON.stringify(item));
