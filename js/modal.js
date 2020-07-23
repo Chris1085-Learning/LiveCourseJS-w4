@@ -112,11 +112,11 @@ export default {
                       <div class="form-check">
                         <input
                           id="is_enabled"
-                          v-model="tempProduct.is_enabled"
+                          v-model="tempProduct.enabled"
                           class="form-check-input"
                           type="checkbox"
                         />
-                        <label class="form-check-label" for="is_enabled">是否啟用</label>
+                        <label class="form-check-label" for="enabled">是否啟用</label>
                       </div>
                     </div>
                   </div>
@@ -134,11 +134,37 @@ export default {
           </div>`,
   data() {
     return {
-      // tempProduct: {}
+      // isNew: "",
     };
   },
   methods: {
-    updateProduct() {},
+    updateProduct() {
+      let api = "";
+      axios.defaults.headers.common.Authorization = `Bearer ${this.user.token}`;
+
+      // 新增產品
+      if (this.isNew) {
+        api = `https://course-ec-api.hexschool.io/api/${this.user.uuid}/admin/ec/product`;
+
+        // 將imageUrl從字串轉為陣列格式，防止post出錯
+        const tempImageUrl = this.tempProduct.imageUrl;
+        this.tempProduct.imageUrl = [];
+        this.tempProduct.imageUrl.push(tempImageUrl);
+
+        axios.post(api, this.tempProduct).then((res) => {
+          // 將update事件傳出到product.html 前內後外
+          this.$emit("update");
+          $("#productModal").modal("hide");
+        });
+      } else {
+        //更新產品
+        api = `https://course-ec-api.hexschool.io/api/${this.user.uuid}/admin/ec/product/${this.tempProduct.id}`;
+        axios.patch(api, this.tempProduct).then((res) => {
+          // 將update事件傳出到product.html 前內後外
+          this.$emit("update");
+        });
+      }
+    },
   },
-  props: ["tempProduct"],
+  props: ["tempProduct", "user", "isNew"],
 };

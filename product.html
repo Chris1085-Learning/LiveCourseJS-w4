@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LiveCourseJS-w3</title>
+    <title>LiveCourseJS-w4</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link rel="stylesheet" href="./css/reset.css" />
@@ -49,7 +49,7 @@
                 {{ item.price }}
               </td>
               <td>
-                <span v-if="item.is_enabled" class="text-success">啟用</span>
+                <span v-if="item.enabled" class="text-success">啟用</span>
                 <span v-else>未啟用</span>
               </td>
               <td>
@@ -70,7 +70,7 @@
           </tbody>
         </table>
 
-        <pagination :pages="pagination" @update="getProducts"> </pagination>
+        <pagination :pages="pagination" @update-page="getProducts"> </pagination>
         <!-- Modal -->
         <div
           id="productModal"
@@ -80,8 +80,9 @@
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
-          <modal :temp-product="tempProduct"></modal>
+          <modal :temp-product="tempProduct" :user="user" :is-new="isNew" @update="getProducts"></modal>
         </div>
+
         <div
           id="delProductModal"
           class="modal fade"
@@ -90,30 +91,7 @@
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
-          <div class="modal-dialog" role="document">
-            <div class="modal-content border-0">
-              <div class="modal-header bg-danger text-white">
-                <h5 id="exampleModalLabel" class="modal-title">
-                  <span>刪除產品</span>
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                是否刪除
-                <strong class="text-danger">{{ tempProduct.title }}</strong> 商品(刪除後將無法恢復)。
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
-                  取消
-                </button>
-                <button type="button" class="btn btn-danger" @click="delProduct">
-                  確認刪除
-                </button>
-              </div>
-            </div>
-          </div>
+          <delmodal :temp-product="tempProduct" :user="user" @delete="getProducts"></delmodal>
         </div>
       </div>
     </div>

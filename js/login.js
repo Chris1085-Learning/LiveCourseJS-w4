@@ -1,5 +1,3 @@
-// Vue.component(id, [definition]);
-
 new Vue({
   el: "#app",
   data: {
