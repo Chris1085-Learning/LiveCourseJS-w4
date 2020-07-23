@@ -12,9 +12,6 @@ new Vue({
   },
   created() {
     this.user.token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    if (this.user.token === "") {
-      window.location = "login.html";
-    }
   },
   methods: {
     login() {
